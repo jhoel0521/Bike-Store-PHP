@@ -44,9 +44,12 @@
 
     </header>
     <main class="container">
-<!--Si hubo envìo de mensaje entonces visualizamos el mensaje-->
-    <?php if (isset($_GET['mensaje'])) { ?>
-        <script>
-                Swal.fire({icon: 'success',title:"<?php echo $_GET['mensaje']; ?>"});
-        </script>
-    <?php } ?>
+        <!--Si hubo envìo de mensaje entonces visualizamos el mensaje-->
+        <?php if (isset($_GET['mensaje'])) { ?>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: "<?php echo $_GET['mensaje']; ?>"
+                });
+            </script>
+        <?php } ?>

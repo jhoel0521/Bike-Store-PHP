@@ -1,12 +1,12 @@
 <?php include("../../bd.php");
 if ($_POST) {
     //RECOLECTAMOS LOS DATOS DEL POST
-    $product_name = (isset($_POST["product_name"])?$_POST["product_name"]: "");
-    $model_year = (isset($_POST["model_year"])?$_POST["model_year"]: "");
-    $price = (isset($_POST["price"])?$_POST["price"]: "");
-    $category_id = (isset($_POST["category_id"])?$_POST["category_id"]: "");
+    $product_name = (isset($_POST["product_name"]) ? $_POST["product_name"] : "");
+    $model_year = (isset($_POST["model_year"]) ? $_POST["model_year"] : "");
+    $price = (isset($_POST["price"]) ? $_POST["price"] : "");
+    $category_id = (isset($_POST["category_id"]) ? $_POST["category_id"] : "");
     //Para la imagen cambiamos a $_FILES y agregamos ['name']
-    $foto = (isset($_FILES["foto"]["name"])?$_FILES["foto"]["name"]: "");
+    $foto = (isset($_FILES["foto"]["name"]) ? $_FILES["foto"]["name"] : "");
     //preparar la insercion de datos
     $sentencia = $conexion->prepare("INSERT INTO 
     products (product_id, product_name, model_year, price, category_id, foto) 
@@ -18,8 +18,8 @@ if ($_POST) {
     $sentencia->bindParam(":category_id", $category_id);
     $sentencia->bindParam(":foto", $foto);
     //adjuntar la imagen con nombre distinto de archivo
-    $fecha_=new DateTime();
-    $nombreArchivo_foto = ($foto='') ? $fecha_->getTimestamp() . "_" . $_FILES["foto"]["name"]:"";
+    $fecha_ = new DateTime();
+    $nombreArchivo_foto = ($foto = '') ? $fecha_->getTimestamp() . "_" . $_FILES["foto"]["name"] : "";
     //creamos archivos temporales para subir las imagenes
     $tmp_foto = $_FILES["foto"]["full_path"];
     if ($tmp_foto != '') {
@@ -81,7 +81,7 @@ $lista_categorias = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                 </select>
             </div>
             <button type="submit" class="btn btn-outline-success">Agregar</button>
-            <a name="" id="" class="btn btn-outline-secondary" href="index.php" role="button">Cancelar</a>          
+            <a name="" id="" class="btn btn-outline-secondary" href="index.php" role="button">Cancelar</a>
         </form>
     </div>
 </div>

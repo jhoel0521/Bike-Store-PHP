@@ -1,21 +1,21 @@
-<?php include("../../bd.php"); 
-if(isset($_GET['txtId'])){
-    $txtID=(isset($_GET['txtId']))?$_GET['txtId']:"";
-    $sentencia=$conexion->prepare("SELECT * FROM categories WHERE category_id=:id");
-    $sentencia->bindParam(":id",$txtID);
+<?php include("../../bd.php");
+if (isset($_GET['txtId'])) {
+    $txtID = (isset($_GET['txtId'])) ? $_GET['txtId'] : "";
+    $sentencia = $conexion->prepare("SELECT * FROM categories WHERE category_id=:id");
+    $sentencia->bindParam(":id", $txtID);
     $sentencia->execute();
     //creamos la variable
-    $registro=$sentencia->fetch(PDO::FETCH_LAZY);
-    $category_name=$registro["category_name"];
+    $registro = $sentencia->fetch(PDO::FETCH_LAZY);
+    $category_name = $registro["category_name"];
 }
 //el codigo siguiente copio de crear.php
-if($_POST){
+if ($_POST) {
     //Validacion del nombre categoria
-    $txtID=(isset($_POST['txtID']))?$_POST['txtID']:""; 
-    $category_name=(isset($_POST['category_name'])?$_POST['category_name']:"");
+    $txtID = (isset($_POST['txtID'])) ? $_POST['txtID'] : "";
+    $category_name = (isset($_POST['category_name']) ? $_POST['category_name'] : "");
     //Preparar la insercion de datos
     $sentencia = $conexion->prepare("UPDATE categories SET category_name=:category_name 
-    WHERE category_id=:id"); 
+    WHERE category_id=:id");
     //Asignar los valores que devueven el metodo POST (los que vienen del formulario)
     $sentencia->bindParam(":id", $txtID);
     $sentencia->bindParam(":category_name", $category_name);
@@ -39,8 +39,7 @@ if($_POST){
                     readonly
                     name="txtID"
                     id="xtID"
-                    aria-describedby="HelpId" 
-                />
+                    aria-describedby="HelpId" />
             </div>
             <div class="mb-3">
                 <input
