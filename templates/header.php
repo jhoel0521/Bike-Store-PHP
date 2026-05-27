@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../libs/functions.php';
 ensureSeccion();
-$url_base = "http://localhost/bike_store/";
 ?>
 <!doctype html>
 <html lang="es" data-bs-theme="light">
@@ -26,22 +25,22 @@ $url_base = "http://localhost/bike_store/";
         <nav class="navbar navbar-expand navbar-light bg-light">
             <ul class="nav navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" href="<?= $url_base ?>" aria-current="page">Inicio <span class="visually-hidden">(current)</span></a>
+                    <a class="nav-link active" href="<?= base_url() ?>" aria-current="page">Inicio <span class="visually-hidden">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $url_base ?>secciones/categorias/">Categorias</a>
-                </li>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= $url_base ?>secciones/clientes/">clientes</a>
+                    <a class="nav-link" href="<?= base_url() ?>secciones/categorias/">Categorias</a>
                 </li>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $url_base ?>secciones/empleados/">Empleados</a>
+                    <a class="nav-link" href="<?= base_url() ?>secciones/clientes/">clientes</a>
                 </li>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $url_base ?>secciones/productos/">Productos</a>
+                    <a class="nav-link" href="<?= base_url() ?>secciones/empleados/">Empleados</a>
+                </li>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= base_url() ?>secciones/productos/">Productos</a>
                 </li>
             </ul>
         </nav>
