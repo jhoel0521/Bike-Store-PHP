@@ -11,10 +11,17 @@ class DB
 {
 
     private static $servidor = "127.0.0.1"; //se puede poner localhost o el puerto 127.0.0.1
-    private static $baseDeDatos = "bike_store";
+    private static $baseDeDatos = "Bike_Store";
     private static $usuario = "root";
     private static $contrasena = "";
     private static ?PDO $conexion = null;
+
+    private static function obtenerConfiguracion(string $clave, string $valorPorDefecto): string
+    {
+        $valor = getenv($clave);
+        return $valor !== false && $valor !== '' ? $valor : $valorPorDefecto;
+    }
+
     public static function conectar()
     {
         if (self::$conexion == null) {
@@ -29,11 +36,16 @@ class DB
      */
     private static function crearConexion()
     {
+        $servidor = self::obtenerConfiguracion('DB_HOST', self::$servidor);
+        $baseDeDatos = self::obtenerConfiguracion('DB_NAME', self::$baseDeDatos);
+        $usuario = self::obtenerConfiguracion('DB_USER', self::$usuario);
+        $contrasena = self::obtenerConfiguracion('DB_PASSWORD', self::$contrasena);
+
         try {
             $conexion = new PDO(
-                "mysql:host=" . self::$servidor . ";dbname=" . self::$baseDeDatos,
-                self::$usuario,
-                self::$contrasena
+                "mysql:host=" . $servidor . ";dbname=" . $baseDeDatos,
+                $usuario,
+                $contrasena
             );
             $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $conexion;

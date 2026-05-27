@@ -1,0 +1,14 @@
+{
+  "name": "bike-store",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "docker compose up --build",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:db": "docker compose up -d db",
+    "docker:logs": "docker compose logs -f",
+    "docker:ps": "docker compose ps",
+    "docker:restart": "docker compose restart"
+  }
+}
