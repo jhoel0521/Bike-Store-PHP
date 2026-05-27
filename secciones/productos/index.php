@@ -1,12 +1,10 @@
 <?php require_once __DIR__ . '/../../bd.php';
+
 //Envio de parametros en la URLo en el metodo GET
 if (isset($_GET["txtID"])) {
     $txtID = (isset($_GET["txtID"])) ? $_GET['txtID'] : "";
     //Buscar el archivo relacionadocon el producto
-    $sentencia = $conexion->prepare("SELECT foto FROM products WHERE products_id=:id");
-    $sentencia->bindParam(":id", $txtID);
-    $sentencia->execute();
-    $registro_recuperado = $sentencia->fetch(PDO::FETCH_ASSOC);
+    $registro_recuperado = \DB::getRegistro("SELECT foto FROM products WHERE product_id=:id", [":id" => $txtID]);
     //Buscar Archivo foto y borralo
     if (isset($registro_recuperado["foto"]) && $registro_recuperado["foto"] != "") {
         if (file_exists("./img/" . $registro_recuperado["foto"])) {
@@ -14,18 +12,14 @@ if (isset($_GET["txtID"])) {
         }
     }
     //Borra los datos del producto
-    $sentencia = $conexion->prepare("DELETE FROM products WHERE products_id=:id");
-    $sentencia->bindParam(":id", $txtID);
-    $sentencia->execute();
+    \DB::ejecutarConsulta("DELETE FROM products WHERE product_id=:id", [":id" => $txtID]);
     $mensaje = "Registro eliminado";
     redirigir_con_mensaje('index.php', $mensaje);
 }
 //Consulta de productos y categorias para visualizar como unico registro
-$sentencia = $conexion->prepare("SELECT *,
+$lista_productos = \DB::getTabla("SELECT *,
 (SELECT category_name FROM categories WHERE category_id=products.category_id limit 1) as categoria
 FROM products ORDER BY product_id DESC");
-$sentencia->execute();
-$lista_productos = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 //print_r($lista_categorias);
 ?>
 <?php include("../../templates/header.php"); ?>

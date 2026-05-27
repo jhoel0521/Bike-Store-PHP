@@ -1,60 +1,40 @@
-<?php include("../../bd.php");
+<?php require_once __DIR__ . '/../../bd.php';
+require_once __DIR__ . '/../../libs/functions.php';
+ $txtID = '';
+$category_name = '';
+
 if (isset($_GET['txtId'])) {
-    $txtID = (isset($_GET['txtId'])) ? $_GET['txtId'] : "";
-    $sentencia = $conexion->prepare("SELECT * FROM categories WHERE category_id=:id");
-    $sentencia->bindParam(":id", $txtID);
-    $sentencia->execute();
-    //creamos la variable
-    $registro = $sentencia->fetch(PDO::FETCH_LAZY);
+    $txtID = (string) $_GET['txtId'];
+    $registro = \DB::getRegistro("SELECT * FROM categories WHERE category_id=:id", [":id" => $txtID]);
+
+    if (!$registro) {
+        redirigir_con_mensaje('index.php', 'El registro solicitado no existe.', 'error');
+    }
+
     $category_name = $registro["category_name"];
+} else {
+    redirigir_con_mensaje('index.php', 'Debes seleccionar una categoría válida.', 'warning');
 }
 //el codigo siguiente copio de crear.php
 if ($_POST) {
     //Validacion del nombre categoria
-    $txtID = (isset($_POST['txtID'])) ? $_POST['txtID'] : "";
+    $txtID = (isset($_POST['txtID']) && $_POST['txtID'] !== '') ? $_POST['txtID'] : "";
+
+    if ($txtID === '') {
+        redirigir_con_mensaje('index.php', 'Debes seleccionar una categoría válida.', 'warning');
+    }
+
     $category_name = (isset($_POST['category_name']) ? $_POST['category_name'] : "");
     //Preparar la insercion de datos
-    $sentencia = $conexion->prepare("UPDATE categories SET category_name=:category_name 
-    WHERE category_id=:id");
-    //Asignar los valores que devueven el metodo POST (los que vienen del formulario)
-    $sentencia->bindParam(":id", $txtID);
-    $sentencia->bindParam(":category_name", $category_name);
-    $sentencia->execute();
-    $mensaje = "Registro actualizado";
-    //redireccionar a la pagina index.php
-    header("Location: index.php?mensaje=" . $mensaje);
+    \DB::ejecutarConsulta(
+        "UPDATE categories SET category_name=:category_name WHERE category_id=:id",
+        [":id" => $txtID, ":category_name" => $category_name]
+    );
+    redirigir_con_mensaje('index.php', 'Registro actualizado');
 }
+$accion = "Actualizar";
 ?>
 <?php include("../../templates/header.php"); ?>
 <h3> Editar categorias </h3>
-<div class="card">
-    <div class="card-header">Informaci&oacute;n de categorias</div>
-    <div class="card-body">
-        <form action="" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <input
-                    type="text"
-                    value="<?php echo $txtID; ?>"
-                    class="form-control"
-                    readonly
-                    name="txtID"
-                    id="xtID"
-                    aria-describedby="HelpId" />
-            </div>
-            <div class="mb-3">
-                <input
-                    type="text"
-                    class="form-control"
-                    name="category_name"
-                    id="category_name"
-                    placeholder="Describa la categoria"
-                    aria-describedby="HelpId" />
-                <small id="HelpId" class="form-text text-muted">Describa el nombre de la categoria</small>
-            </div>
-            <button type="submit" class="btn btn-success">Actualizar</button>
-            <a name="" id="" class="btn btn-primary" href="index.php" role="button">Cancelar</a>
-        </form>
-    </div>
-    <div class="card-footer text-body-secondary">Footer</div>
-</div>
+<?php include("form.php"); ?>
 <?php include("../../templates/footer.php"); ?>

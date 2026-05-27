@@ -4,18 +4,13 @@ require_once __DIR__ . '/../../bd.php';
 if (isset($_GET['txtID'])) {
     $txtID = $_GET['txtID'];
 
-    $verificarProductos = $conexion->prepare("SELECT COUNT(*) FROM products WHERE category_id = :id");
-    $verificarProductos->bindParam(":id", $txtID);
-    $verificarProductos->execute();
-    $productosAsociados = $verificarProductos->fetchColumn();
+    $productosAsociados = \DB::getValor("SELECT COUNT(*) FROM products WHERE category_id = :id", [":id" => $txtID]);
 
     if ($productosAsociados > 0) {
         $mensaje = "No se puede eliminar esta categoría porque tiene productos asociados.";
     } else {
         try {
-            $sentencia = $conexion->prepare("DELETE FROM categories WHERE category_id=:id");
-            $sentencia->bindParam(":id", $txtID);
-            $sentencia->execute();
+            \DB::ejecutarConsulta("DELETE FROM categories WHERE category_id=:id", [":id" => $txtID]);
             $mensaje = "Registro eliminado";
         } catch (PDOException $ex) {
             $mensaje = "Error al eliminar la categoría.";
@@ -26,9 +21,7 @@ if (isset($_GET['txtID'])) {
 }
 
 //Consulta de categorias
-$sentencia = $conexion->prepare("SELECT * FROM categories ORDER BY category_id ASC");
-$sentencia->execute();
-$lista_categorias = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+$lista_categorias = \DB::getTabla("SELECT * FROM categories ORDER BY category_id ASC");
 //print_r($lista_categorias);
 ?>
 <?php include("../../templates/header.php"); ?>

@@ -48,11 +48,6 @@ function flash_render(): string
     if (isset($_SESSION['flash'])) {
         $flash = $_SESSION['flash'];
         unset($_SESSION['flash']);
-    } elseif (isset($_GET['mensaje']) && $_GET['mensaje'] !== '') {
-        $flash = [
-            'mensaje' => (string) $_GET['mensaje'],
-            'tipo' => 'success',
-        ];
     }
 
     if ($flash === null) {
