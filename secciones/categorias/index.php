@@ -74,7 +74,7 @@ $lista_categorias = $sentencia->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 <script>
-    function borrar( id) {
+    function borrar(id) {
         Swal.fire({
             title: '¿Deseas eliminar esta categoría?',
             icon: 'warning',
