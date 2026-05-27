@@ -1,12 +1,12 @@
-<?php include("../../bd.php");
+<?php require_once __DIR__ . '/../../bd.php';
 //Envio de parametros en la URLo en el metodo GET
 if (isset($_GET["txtID"])) {
-    $txtID = (isset($_GET["txtID"])) ? $_GET['txt_GET'] : "";
+    $txtID = (isset($_GET["txtID"])) ? $_GET['txtID'] : "";
     //Buscar el archivo relacionadocon el producto
     $sentencia = $conexion->prepare("SELECT foto FROM products WHERE products_id=:id");
     $sentencia->bindParam(":id", $txtID);
     $sentencia->execute();
-    $registro_recuperado = $sentencia->fetch(PDO::FETCH_LAZY);
+    $registro_recuperado = $sentencia->fetch(PDO::FETCH_ASSOC);
     //Buscar Archivo foto y borralo
     if (isset($registro_recuperado["foto"]) && $registro_recuperado["foto"] != "") {
         if (file_exists("./img/" . $registro_recuperado["foto"])) {
@@ -14,12 +14,11 @@ if (isset($_GET["txtID"])) {
         }
     }
     //Borra los datos del producto
-    $txtID = (isset($_GET["txtID"])) ? $_GET['txtID'] : "";
     $sentencia = $conexion->prepare("DELETE FROM products WHERE products_id=:id");
     $sentencia->bindParam(":id", $txtID);
     $sentencia->execute();
     $mensaje = "Registro eliminado";
-    header("Location:index.php?mensaje=" . $mensaje);
+    redirigir_con_mensaje('index.php', $mensaje);
 }
 //Consulta de productos y categorias para visualizar como unico registro
 $sentencia = $conexion->prepare("SELECT *,

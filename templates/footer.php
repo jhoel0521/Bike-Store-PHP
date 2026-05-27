@@ -1,4 +1,5 @@
-</main>
+<?php require_once __DIR__ . '/../libs/functions.php'; ?>
+        </main>
         <footer>
             <!-- place footer here -->
              <h3>Tienda de Bicicletas</h3>
@@ -11,5 +12,6 @@
         ></script>
         <!-- SweetAlert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <?= flash_render() ?>
     </body>
 </html>

@@ -1,7 +1,5 @@
 <?php
 
-$conexion = DB::conectar();
-
 /**
  * Clase `DB` — Helper para conexión y ejecución de consultas usando PDO.
  * Proporciona un singleton de conexión y métodos utilitarios para ejecutar
@@ -10,11 +8,11 @@ $conexion = DB::conectar();
 class DB
 {
 
-    private static $servidor = "localhost"; //se puede poner localhost o el puerto 127.0.0.1
+    private static $servidor = "127.0.0.1"; //se puede poner localhost o el puerto 127.0.0.1
     private static $baseDeDatos = "bike_store";
     private static $usuario = "root";
     private static $contrasena = "";
-    private static $conexion = null;
+    private static ?PDO $conexion = null;
     public static function conectar()
     {
         if (self::$conexion == null) {
@@ -115,3 +113,5 @@ class DB
         return $sentencia->fetchColumn();
     }
 }
+
+$conexion = DB::conectar();
