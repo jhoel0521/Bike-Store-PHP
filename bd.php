@@ -114,4 +114,3 @@ class DB
     }
 }
 
-$conexion = DB::conectar();
