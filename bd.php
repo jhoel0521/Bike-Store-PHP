@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/libs/functions.php';
+
 /**
  * Clase `DB` — Helper para conexión y ejecución de consultas usando PDO.
  * Proporciona un singleton de conexión y métodos utilitarios para ejecutar

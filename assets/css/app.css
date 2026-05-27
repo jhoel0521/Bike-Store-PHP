@@ -1,0 +1,40 @@
+body {
+    background:
+        radial-gradient(circle at top left, rgba(13, 110, 253, 0.08), transparent 32%),
+        radial-gradient(circle at top right, rgba(25, 135, 84, 0.08), transparent 28%),
+        linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.navbar .nav-link {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.08);
+}
+
+.navbar .nav-link.active {
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.12);
+}
+
+.app-hero {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(25, 135, 84, 0.05));
+}
+
+.app-soft-panel {
+    background-color: #f8f9fa;
+}
+
+.app-table-thumb {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+}
+
+.app-empty-state {
+    min-height: 240px;
+}

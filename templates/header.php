@@ -7,43 +7,51 @@ ensureSeccion();
 
 <head>
     <title>Bike Store</title>
-    <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Bootstrap CSS v5.3.8 -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
         crossorigin="anonymous" />
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="<?= base_url() ?>assets/css/app.css" />
 </head>
 
-<body>
-    <header>
-        <!-- place navbar here -->
-        <nav class="navbar navbar-expand navbar-light bg-light">
-            <ul class="nav navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" href="<?= base_url() ?>" aria-current="page">Inicio <span class="visually-hidden">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url() ?>secciones/categorias/">Categorias</a>
-                </li>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url() ?>secciones/clientes/">clientes</a>
-                </li>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url() ?>secciones/empleados/">Empleados</a>
-                </li>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url() ?>secciones/productos/">Productos</a>
-                </li>
-            </ul>
+<body class="d-flex flex-column min-vh-100 bg-light text-dark">
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-semibold text-primary d-flex align-items-center gap-2" href="<?= base_url() ?>">
+                    <span class="badge text-bg-primary rounded-pill">BS</span>
+                    Bike Store
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Alternar navegación">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav ms-auto gap-lg-1">
+                        <li class="nav-item">
+                            <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>"><i class="bi bi-house-door me-1"></i>Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/categorias/"><i class="bi bi-tags me-1"></i>Categorías</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/productos/"><i class="bi bi-bicycle me-1"></i>Productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/clientes/"><i class="bi bi-people me-1"></i>Clientes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/empleados/"><i class="bi bi-briefcase me-1"></i>Empleados</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
-
     </header>
-    <main class="container">
+    <main class="container py-4 py-lg-5 flex-grow-1">
