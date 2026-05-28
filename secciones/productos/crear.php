@@ -5,31 +5,31 @@ if (request()->method() === 'POST') {
     $model_year = request()->get("model_year", "");
     $price = request()->get("price", "");
     $category_id = request()->get("category_id", "");
-    $foto = request()->file("foto", "name", "");
+    $imagen = request()->file("imagen", "name", "");
 
     if ($product_name === "" || $model_year === "" || $price === "" || $category_id === "") {
         $mensaje = "Todos los campos son obligatorios.";
     } else {
-        $nombreArchivo_foto = "";
+        $nombreArchivo_imagen = "";
 
-        if ($foto !== "") {
+        if ($imagen !== "") {
             $fecha_ = new DateTime();
-            $nombreArchivo_foto = $fecha_->getTimestamp() . "_" . $foto;
-            $tmp_foto = request()->file("foto", "tmp_name", "");
+            $nombreArchivo_imagen = $fecha_->getTimestamp() . "_" . $imagen;
+            $tmp_imagen = request()->file("imagen", "tmp_name", "");
 
-            if ($tmp_foto !== "") {
-                move_uploaded_file($tmp_foto, "./img/" . $nombreArchivo_foto);
+            if ($tmp_imagen !== "") {
+                move_uploaded_file($tmp_imagen, "./img/" . $nombreArchivo_imagen);
             }
         }
 
         \DB::ejecutarConsulta(
-            "INSERT INTO products (product_id, product_name, model_year, price, category_id, foto) VALUES (NULL, :product_name, :model_year, :price, :category_id, :foto)",
+            "INSERT INTO products (product_id, product_name, model_year, price, category_id, imagen) VALUES (NULL, :product_name, :model_year, :price, :category_id, :imagen)",
             [
                 ":product_name" => $product_name,
                 ":model_year" => $model_year,
                 ":price" => $price,
                 ":category_id" => $category_id,
-                ":foto" => $nombreArchivo_foto,
+                ":imagen" => $nombreArchivo_imagen,
             ]
         );
         redirigir_con_mensaje('index.php', 'Registro agregado');
@@ -39,7 +39,7 @@ if (request()->method() === 'POST') {
 $lista_categorias = \DB::getTabla("SELECT * FROM categories");
 $txtID = "";
 $product_name = "";
-$foto_actual = "";
+$imagen_actual = "";
 $model_year = "";
 $price = "";
 $category_id = "";

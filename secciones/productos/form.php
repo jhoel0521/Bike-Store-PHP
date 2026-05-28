@@ -1,7 +1,7 @@
 <?php
 $txtID = $txtID ?? '';
 $product_name = $product_name ?? '';
-$foto_actual = $foto_actual ?? '';
+$imagen_actual = $imagen_actual ?? '';
 $model_year = $model_year ?? '';
 $price = $price ?? '';
 $category_id = $category_id ?? '';
@@ -39,14 +39,14 @@ $accion = $accion ?? 'Guardar';
             </div>
 
             <div class="col-md-6">
-                <label for="foto" class="form-label text-secondary fw-semibold">Imagen del producto</label>
+                <label for="imagen" class="form-label text-secondary fw-semibold">Imagen del producto</label>
                 <input
                     type="file"
                     class="form-control rounded-3"
-                    name="foto"
-                    id="foto"
+                    name="imagen"
+                    id="imagen"
                     accept="image/*"
-                    <?= empty($foto_actual) ? 'required' : '' ?>>
+                    <?= empty($imagen_actual) ? 'required' : '' ?>>
                 <div class="form-text">Sube una imagen en formato jpg, png o webp.</div>
             </div>
 
@@ -55,10 +55,10 @@ $accion = $accion ?? 'Guardar';
                 <div class="app-soft-panel rounded-3 p-3 text-center">
                     <img
                         id="preview"
-                        src="<?= !empty($foto_actual) ? 'img/' . htmlspecialchars($foto_actual, ENT_QUOTES, 'UTF-8') : '' ?>"
+                        src="<?= !empty($imagen_actual) ? 'img/' . htmlspecialchars($imagen_actual, ENT_QUOTES, 'UTF-8') : '' ?>"
                         alt="Vista previa"
-                        class="img-fluid rounded-3 shadow-sm <?= empty($foto_actual) ? 'd-none' : '' ?> app-product-preview">
-                    <div id="previewPlaceholder" class="<?= empty($foto_actual) ? '' : 'd-none' ?> text-secondary small py-5">
+                        class="img-fluid rounded-3 shadow-sm <?= empty($imagen_actual) ? 'd-none' : '' ?> app-product-preview">
+                    <div id="previewPlaceholder" class="<?= empty($imagen_actual) ? '' : 'd-none' ?> text-secondary small py-5">
                         La vista previa aparecerá aquí.
                     </div>
                 </div>
@@ -114,12 +114,12 @@ $accion = $accion ?? 'Guardar';
 </div>
 
 <script>
-    const fotoInput = document.getElementById('foto');
+    const imagenInput = document.getElementById('imagen');
     const preview = document.getElementById('preview');
     const previewPlaceholder = document.getElementById('previewPlaceholder');
 
-    if (fotoInput && preview && previewPlaceholder) {
-        fotoInput.addEventListener('change', function() {
+    if (imagenInput && preview && previewPlaceholder) {
+        imagenInput.addEventListener('change', function() {
             const file = this.files && this.files[0];
 
             if (!file) {

@@ -15,7 +15,7 @@ CREATE TABLE categories (
 CREATE TABLE products (
   product_id INT AUTO_INCREMENT PRIMARY KEY,
   product_name VARCHAR(100) NOT NULL,
-  foto VARCHAR(250) NULL,
+  imagen VARCHAR(250) NULL,
   model_year SMALLINT NOT NULL,
   price DECIMAL(10,2) NOT NULL,
   category_id INT NOT NULL,
@@ -36,6 +36,15 @@ CREATE TABLE customers (
   state VARCHAR(25)
 ) ENGINE=InnoDB;
 
+-- Tabla: users
+CREATE TABLE users (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  user VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  email VARCHAR(150) NOT NULL UNIQUE,
+  role ENUM('admin', 'empleado') NOT NULL DEFAULT 'empleado'
+) ENGINE=InnoDB;
+
 -- Tabla: orders
 CREATE TABLE orders (
   order_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,6 +54,8 @@ CREATE TABLE orders (
   estado VARCHAR(25) NOT NULL DEFAULT 'Pendiente',
   total_amount DECIMAL(10,2) NOT NULL, 
   CONSTRAINT fk_customer FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    ON DELETE RESTRICT,
+  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id)
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
@@ -74,8 +85,13 @@ INSERT INTO categories (category_name) VALUES
 ('Cruiser Bikes'),
 ('Accessories');
 
+-- Inserción de usuarios para el login con roles
+INSERT INTO users (user, password, email, role) VALUES
+('admin', 'Admin123!', 'admin@bike-store.com', 'admin'),
+('empleado', 'User123!', 'empleado@bike-store.com', 'empleado');
+
 -- Inserción de productos (Parte 1)
-INSERT INTO products (product_name, foto, model_year, price, category_id)
+INSERT INTO products (product_name, imagen, model_year, price, category_id)
 VALUES
 ('Trek 820 - 2017', NULL, 2017, 379.99, 1),
 ('Ritchey Timberwolf Frameset - 2017', NULL, 2018, 749.99, 1),
@@ -111,7 +127,7 @@ VALUES
 -- BLOQUE 2 (Parte 2): INSERCIÓN DE PRODUCTOS (continuación)
 USE Bike_Store;
 
-INSERT INTO products (product_name, foto, model_year, price, category_id)
+INSERT INTO products (product_name, imagen, model_year, price, category_id)
 VALUES
 ('Surly Wednesday - 2018', NULL, 2018, 1632.99, 1),
 ('Trek Farley Alloy Frameset - 2018', NULL, 2018, 469.99, 1),
@@ -177,7 +193,7 @@ VALUES
 -- BLOQUE 2 (Parte 3): INSERCIÓN DE PRODUCTOS (final)
 USE Bike_Store;
 
-INSERT INTO products (product_name, foto, model_year, price, category_id)
+INSERT INTO products (product_name, imagen, model_year, price, category_id)
 VALUES
 ('Trek 820 - 2019', NULL, 2019, 379.99, 1),
 ('Trek Marlin 5 - 2019', NULL, 2019, 489.99, 1),
