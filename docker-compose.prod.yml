@@ -6,11 +6,11 @@ services:
     container_name: bike_store_app
     command: sh -lc "chown -R www-data:www-data /var/www/html/secciones/productos/img && chmod -R 775 /var/www/html/secciones/productos/img && apache2-foreground"
     environment:
-      DB_HOST: db
-      DB_NAME: Bike_Store
-      DB_USER: bike_user
-      DB_PASSWORD: bike_password
-      BASE_URL: ${BASE_URL:-http://localhost}
+      DB_HOST: ${DB_HOST:-db}
+      DB_NAME: ${DB_NAME:-Bike_Store}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      BASE_URL: ${BASE_URL}
     depends_on:
       db:
         condition: service_healthy
@@ -23,15 +23,15 @@ services:
     container_name: bike_store_db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: Bike_Store
-      MYSQL_USER: bike_user
-      MYSQL_PASSWORD: bike_password
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: ${DB_NAME:-Bike_Store}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_ROOT_HOST: "%"
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${DB_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 10
