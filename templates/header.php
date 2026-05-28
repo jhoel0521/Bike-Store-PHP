@@ -9,7 +9,9 @@ ensureSeccion();
     <title>Bike Store</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="description" content="Tienda de bicicletas en PHP con Bootstrap 5" />
+    <!-- icon -->
+    <link rel="icon" type="image/x-icon" href="<?= base_url() ?>assets/bike.png" />
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -26,7 +28,7 @@ ensureSeccion();
         <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
             <div class="container">
                 <a class="navbar-brand fw-semibold text-primary d-flex align-items-center gap-2" href="<?= base_url() ?>">
-                    <span class="badge text-bg-primary rounded-pill">BS</span>
+                    <img src="<?= base_url() ?>assets/bike.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
                     Bike Store
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Alternar navegación">
