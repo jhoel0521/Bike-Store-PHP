@@ -7,7 +7,7 @@
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
     "docker:db": "docker compose up -d db",
-    "docker:run-script-db": "docker compose exec -T db mysql -uroot -proot_password < MysqlBikeStoreScript.sql",
+    "docker:run-script-db": "docker compose exec -T app php run-seeder-prod.php || (docker compose build app && docker compose run --rm --no-deps app php run-seeder-prod.php)",
     "docker:logs": "docker compose logs -f",
     "docker:ps": "docker compose ps",
     "docker:restart": "docker compose restart"
