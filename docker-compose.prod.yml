@@ -5,8 +5,6 @@ services:
       dockerfile: Dockerfile
     container_name: bike_store_app
     command: sh -lc "chown -R www-data:www-data /var/www/html/secciones/productos/img && chmod -R 775 /var/www/html/secciones/productos/img && apache2-foreground"
-    ports:
-      - "80:80"
     environment:
       DB_HOST: db
       DB_NAME: Bike_Store
