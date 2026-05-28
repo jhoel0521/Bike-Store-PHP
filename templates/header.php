@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../libs/functions.php';
 ensureSeccion();
+app_require_auth();
+$usuarioActual = app_current_user();
 ?>
 <!doctype html>
 <html lang="es" data-bs-theme="light">
@@ -35,7 +37,7 @@ ensureSeccion();
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="mainNavbar">
-                    <ul class="navbar-nav ms-auto gap-lg-1">
+                    <ul class="navbar-nav ms-auto gap-lg-1 align-items-lg-center">
                         <li class="nav-item">
                             <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>"><i class="bi bi-house-door me-1"></i>Inicio</a>
                         </li>
@@ -50,6 +52,18 @@ ensureSeccion();
                         </li>
                         <li class="nav-item">
                             <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/empleados/"><i class="bi bi-briefcase me-1"></i>Empleados</a>
+                        </li>
+                        <?php if (($usuarioActual['role'] ?? '') === 'admin') { ?>
+                            <li class="nav-item">
+                                <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/usuarios/"><i class="bi bi-person-gear me-1"></i>Usuarios</a>
+                            </li>
+                        <?php } ?>
+                        <li class="nav-item ms-lg-3">
+                            <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill bg-light border small">
+                                <span class="badge bg-primary-subtle text-primary rounded-pill"><?= htmlspecialchars(app_role_label((string) ($usuarioActual['role'] ?? '')), ENT_QUOTES, 'UTF-8') ?></span>
+                                <span class="fw-semibold"><?= htmlspecialchars((string) ($usuarioActual['user'] ?? ''), ENT_QUOTES, 'UTF-8') ?></span>
+                                <a class="btn btn-sm btn-outline-secondary rounded-pill" href="<?= base_url() ?>cerrar.php">Salir</a>
+                            </div>
                         </li>
                     </ul>
                 </div>

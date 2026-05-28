@@ -1,6 +1,6 @@
 # Bike Store
 
-Proyecto PHP simple para administrar categorías y productos.
+Proyecto PHP simple para administrar categorías, productos y usuarios con login por roles.
 
 ## Requisitos
 
@@ -51,3 +51,4 @@ Luego elimina el volumen `db_data` desde Docker o vuelve a crear el entorno limp
 
 - La conexión de PHP lee estas variables: `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`.
 - Si lo ejecutas fuera de Docker, `bd.php` usa valores por defecto locales.
+- Credenciales de demo del seed: `admin / Admin123!` y `empleado / User123!`.
