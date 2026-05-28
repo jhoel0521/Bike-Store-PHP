@@ -11,8 +11,16 @@ services:
       DB_NAME: Bike_Store
       DB_USER: bike_user
       DB_PASSWORD: bike_password
-    volumes:
-      - ./:/var/www/html
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /var/www/html
+          initial_sync: true
+          ignore:
+            - .git/
+            - node_modules/
+            - .vscode/
     depends_on:
       db:
         condition: service_healthy
@@ -26,11 +34,11 @@ services:
       MYSQL_USER: bike_user
       MYSQL_PASSWORD: bike_password
       MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_HOST: "%"
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./MysqlBikeStoreScript.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password"]
       interval: 10s

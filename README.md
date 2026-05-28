@@ -25,12 +25,15 @@ La app queda disponible en:
 ```bash
 npm run dev
 npm run docker:up
+npm run docker:run-script-db
 npm run docker:db
 npm run docker:logs
 npm run docker:ps
 npm run docker:restart
 npm run docker:down
 ```
+
+`npm run dev` usa Compose Watch para sincronizar cambios en caliente dentro del contenedor de la app.
 
 ## Base de datos
 

@@ -2,7 +2,7 @@
 
 function base_url(): string
 {
-    return 'http://localhost/bike_store/';
+    return 'http://localhost:8080/';
 }
 
 function ensureSeccion(): void

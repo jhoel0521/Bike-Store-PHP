@@ -10,7 +10,7 @@ require_once __DIR__ . '/libs/functions.php';
 class DB
 {
 
-    private static $servidor = "127.0.0.1"; //se puede poner localhost o el puerto 127.0.0.1
+    private static $servidor = "127.0.0.1";
     private static $baseDeDatos = "Bike_Store";
     private static $usuario = "root";
     private static $contrasena = "";
@@ -40,7 +40,6 @@ class DB
         $baseDeDatos = self::obtenerConfiguracion('DB_NAME', self::$baseDeDatos);
         $usuario = self::obtenerConfiguracion('DB_USER', self::$usuario);
         $contrasena = self::obtenerConfiguracion('DB_PASSWORD', self::$contrasena);
-
         try {
             $conexion = new PDO(
                 "mysql:host=" . $servidor . ";dbname=" . $baseDeDatos,
