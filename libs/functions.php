@@ -2,7 +2,13 @@
 
 function base_url(): string
 {
-    return 'http://localhost:8080/';
+    $baseUrl = getenv('BASE_URL');
+
+    if ($baseUrl === false || $baseUrl === '') {
+        return 'http://localhost/Bike-Store-PHP/';
+    }
+
+    return rtrim($baseUrl, '/') . '/';
 }
 
 function ensureSeccion(): void
