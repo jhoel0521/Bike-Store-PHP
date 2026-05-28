@@ -13,12 +13,35 @@
 function base_url(): string
 {
     $baseUrl = getenv('BASE_URL');
+    $isHttps = false;
 
-    if ($baseUrl === false || $baseUrl === '') {
-        return 'http://localhost/Bike-Store-PHP/';
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        $isHttps = true;
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+        $isHttps = strtolower((string) $_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https';
+    } elseif (isset($_SERVER['SERVER_PORT']) && (string) $_SERVER['SERVER_PORT'] === '443') {
+        $isHttps = true;
     }
 
-    return rtrim($baseUrl, '/') . '/';
+    $scheme = $isHttps ? 'https' : 'http';
+
+    if ($baseUrl === false || $baseUrl === '') {
+        return $scheme . '://localhost/Bike-Store-PHP/';
+    }
+
+    $baseUrl = rtrim($baseUrl, '/') . '/';
+
+    $parsedUrl = parse_url($baseUrl);
+
+    if ($parsedUrl === false) {
+        return $scheme . '://localhost/Bike-Store-PHP/';
+    }
+
+    if (isset($parsedUrl['scheme']) && $parsedUrl['scheme'] !== $scheme) {
+        $baseUrl = preg_replace('/^https?:\/\//i', $scheme . '://', $baseUrl) ?? $baseUrl;
+    }
+
+    return $baseUrl;
 }
 
 /**

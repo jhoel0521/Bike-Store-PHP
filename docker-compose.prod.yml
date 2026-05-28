@@ -1,0 +1,44 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bike_store_app
+    command: sh -lc "chown -R www-data:www-data /var/www/html/secciones/productos/img && chmod -R 775 /var/www/html/secciones/productos/img && apache2-foreground"
+    ports:
+      - "80:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: Bike_Store
+      DB_USER: bike_user
+      DB_PASSWORD: bike_password
+      BASE_URL: ${BASE_URL:-http://localhost}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - product_images:/var/www/html/secciones/productos/img
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: bike_store_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: Bike_Store
+      MYSQL_USER: bike_user
+      MYSQL_PASSWORD: bike_password
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  db_data:
+  product_images:
