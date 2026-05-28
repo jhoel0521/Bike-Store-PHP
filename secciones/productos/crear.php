@@ -1,11 +1,11 @@
 <?php require_once __DIR__ . '/../../bd.php';
-if ($_POST) {
+if (request()->method() === 'POST') {
     //RECOLECTAMOS LOS DATOS DEL POST
-    $product_name = (isset($_POST["product_name"]) ? $_POST["product_name"] : "");
-    $model_year = (isset($_POST["model_year"]) ? $_POST["model_year"] : "");
-    $price = (isset($_POST["price"]) ? $_POST["price"] : "");
-    $category_id = (isset($_POST["category_id"]) ? $_POST["category_id"] : "");
-    $foto = (isset($_FILES["foto"]["name"]) ? $_FILES["foto"]["name"] : "");
+    $product_name = request()->get("product_name", "");
+    $model_year = request()->get("model_year", "");
+    $price = request()->get("price", "");
+    $category_id = request()->get("category_id", "");
+    $foto = request()->file("foto", "name", "");
 
     if ($product_name === "" || $model_year === "" || $price === "" || $category_id === "") {
         $mensaje = "Todos los campos son obligatorios.";
@@ -15,7 +15,7 @@ if ($_POST) {
         if ($foto !== "") {
             $fecha_ = new DateTime();
             $nombreArchivo_foto = $fecha_->getTimestamp() . "_" . $foto;
-            $tmp_foto = $_FILES["foto"]["tmp_name"];
+            $tmp_foto = request()->file("foto", "tmp_name", "");
 
             if ($tmp_foto !== "") {
                 move_uploaded_file($tmp_foto, "./img/" . $nombreArchivo_foto);
