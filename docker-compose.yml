@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: bike_store_app
+    command: sh -lc "chown -R www-data:www-data /var/www/html/secciones/productos/img && chmod -R 775 /var/www/html/secciones/productos/img && apache2-foreground"
     ports:
       - "8080:80"
     environment:
@@ -11,6 +12,7 @@ services:
       DB_NAME: Bike_Store
       DB_USER: bike_user
       DB_PASSWORD: bike_password
+      BASE_URL: ${BASE_URL}
     develop:
       watch:
         - action: sync
@@ -24,7 +26,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
+    volumes:
+      - ./secciones/productos/img:/var/www/html/secciones/productos/img
   db:
     image: mysql:8.0
     container_name: bike_store_db
