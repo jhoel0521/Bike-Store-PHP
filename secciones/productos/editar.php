@@ -40,8 +40,10 @@ if ($_POST) {
     $registro_recuperado = \DB::getRegistro("SELECT foto FROM products WHERE product_id=:id", [":id" => $txtID]);
 
     if ($foto !== "") {
-        if (isset($registro_recuperado["foto"]) && $registro_recuperado["foto"] !== "" && file_exists("./img/" . $registro_recuperado["foto"])) {
-            unlink("./img/" . $registro_recuperado["foto"]);
+        $directorio_imagenes = __DIR__ . "/img/";
+
+        if (isset($registro_recuperado["foto"]) && $registro_recuperado["foto"] !== "" && file_exists($directorio_imagenes . $registro_recuperado["foto"])) {
+            unlink($directorio_imagenes . $registro_recuperado["foto"]);
         }
 
         $fecha_ = new DateTime();
@@ -49,7 +51,7 @@ if ($_POST) {
         $tmp_foto = $_FILES["foto"]["tmp_name"];
 
         if ($tmp_foto !== "") {
-            move_uploaded_file($tmp_foto, "./img/" . $nombreArchivo_foto);
+            move_uploaded_file($tmp_foto, $directorio_imagenes . $nombreArchivo_foto);
         }
     } else {
         $nombreArchivo_foto = $registro_recuperado["foto"];
