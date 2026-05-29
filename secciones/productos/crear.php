@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/../../bd.php';
+app_require_auth();
 if (request()->method() === 'POST') {
     //RECOLECTAMOS LOS DATOS DEL POST
     $product_name = request()->get("product_name", "");

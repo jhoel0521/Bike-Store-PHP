@@ -2,7 +2,6 @@
 
 require_once __DIR__ . '/libs/functions.php';
 ensureSeccion();
-app_require_auth();
 
 /**
  * Clase `DB` — Helper para conexión y ejecución de consultas usando PDO.

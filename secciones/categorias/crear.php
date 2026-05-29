@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/../../bd.php';
+app_require_auth();
 if (request()->method() === 'POST') {
     //Validacion del nombre categoria
     $category_name = request()->get('category_name', "");

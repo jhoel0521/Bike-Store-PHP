@@ -2,6 +2,9 @@
 
 //Envio de parametros en la URLo en el metodo GET
 if (isset($_GET["txtID"])) {
+    if (!app_is_logged_in()) {
+        redirigir(base_url() . 'login.php');
+    }
     $txtID = (isset($_GET["txtID"])) ? $_GET['txtID'] : "";
     //Buscar el archivo relacionadocon el producto
     $registro_recuperado = \DB::getRegistro("SELECT imagen FROM products WHERE product_id=:id", [":id" => $txtID]);
@@ -29,9 +32,11 @@ FROM products ORDER BY product_id DESC");
         <h1 class="h3 fw-bold mb-1">Productos</h1>
         <p class="text-secondary mb-0">Control visual del inventario con acciones claras.</p>
     </div>
+    <?php if (app_is_logged_in()) { ?>
     <a class="btn btn-primary px-4 rounded-pill" href="crear.php" role="button">
         <i class="bi bi-plus-circle me-2"></i>Nuevo producto
     </a>
+    <?php } ?>
 </div>
 
 <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -52,7 +57,9 @@ FROM products ORDER BY product_id DESC");
                         <th scope="col" class="text-secondary fw-semibold small text-uppercase">Año Modelo</th>
                         <th scope="col" class="text-secondary fw-semibold small text-uppercase">Precio</th>
                         <th scope="col" class="text-secondary fw-semibold small text-uppercase">Categoría</th>
+                        <?php if (app_is_logged_in()) { ?>
                         <th scope="col" class="text-secondary fw-semibold small text-uppercase text-end">Acciones</th>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,6 +89,7 @@ FROM products ORDER BY product_id DESC");
                                         <?php echo htmlspecialchars($registro['categoria'] ?? 'Sin categoría', ENT_QUOTES, 'UTF-8'); ?>
                                     </span>
                                 </td>
+                                <?php if (app_is_logged_in()) { ?>
                                 <td class="text-end">
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Acciones de producto">
                                         <a class="btn btn-outline-secondary" href="editar.php?txtID=<?php echo $registro['product_id']; ?>" role="button">
@@ -92,6 +100,7 @@ FROM products ORDER BY product_id DESC");
                                         </a>
                                     </div>
                                 </td>
+                                <?php } ?>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>

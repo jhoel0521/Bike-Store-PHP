@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/../../bd.php';
+app_require_auth();
 require_once __DIR__ . '/../../libs/functions.php';
 $txtID = '';
 $product_name = '';

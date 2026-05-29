@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../bd.php';
+app_require_auth();
 //Envio de parametros en la URL o en el metodo GET
 if (isset($_GET['txtID'])) {
     $txtID = $_GET['txtID'];

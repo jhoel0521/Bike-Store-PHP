@@ -118,6 +118,4 @@ $lista_usuarios = \DB::getTabla("SELECT user_id, user, email, role FROM users OR
     }
 </script>
 
-<?php include("../../templates/footer.php"); ?><?php include("../../templates/header.php"); ?>
-
 <?php include("../../templates/footer.php"); ?>
