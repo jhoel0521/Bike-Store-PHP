@@ -7,12 +7,27 @@ $usuarioActual = app_current_user();
 <html lang="es" data-bs-theme="light">
 
 <head>
-    <title>Bike Store</title>
+    <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') . ' — Bike Store' : 'Bike Store' ?></title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Tienda de bicicletas en PHP con Bootstrap 5" />
-    <!-- icon -->
-    <link rel="icon" type="image/x-icon" href="<?= base_url() ?>assets/bike.png" />
+    <meta name="description" content="<?= isset($pageDescription) ? htmlspecialchars($pageDescription, ENT_QUOTES, 'UTF-8') : 'Gestiona tu catálogo de bicicletas: productos, categorías, clientes y empleados en un solo lugar.' ?>" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Bike Store" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bike Store" />
+    <meta property="og:title" content="<?= isset($pageTitle) ? htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') . ' — Bike Store' : 'Bike Store' ?>" />
+    <meta property="og:description" content="<?= isset($pageDescription) ? htmlspecialchars($pageDescription, ENT_QUOTES, 'UTF-8') : 'Gestiona tu catálogo de bicicletas: productos, categorías, clientes y empleados en un solo lugar.' ?>" />
+    <meta property="og:image" content="<?= base_url() ?>assets/bike.png" />
+    <meta property="og:url" content="<?= htmlspecialchars((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="<?= isset($pageTitle) ? htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') . ' — Bike Store' : 'Bike Store' ?>" />
+    <meta name="twitter:description" content="<?= isset($pageDescription) ? htmlspecialchars($pageDescription, ENT_QUOTES, 'UTF-8') : 'Gestiona tu catálogo de bicicletas: productos, categorías, clientes y empleados en un solo lugar.' ?>" />
+    <meta name="twitter:image" content="<?= base_url() ?>assets/bike.png" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="<?= base_url() ?>assets/bike.png" />
+    <link rel="shortcut icon" href="<?= base_url() ?>assets/bike.png" />
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"

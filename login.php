@@ -34,9 +34,15 @@ if ($_POST) {
 <html lang="es" data-bs-theme="light">
 
 <head>
-    <title>Identificación de Usuario</title>
+    <title>Iniciar sesión — Bike Store</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Accede al panel de administración de Bike Store para gestionar productos, categorías, clientes y empleados." />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="author" content="Bike Store" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="<?= base_url() ?>assets/bike.png" />
+    <link rel="shortcut icon" href="<?= base_url() ?>assets/bike.png" />
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -87,7 +93,9 @@ if ($_POST) {
                                         <input type="password" class="form-control form-control-lg rounded-3" name="clave" id="clave" placeholder="Ingrese su contraseña">
                                     </div>
                                     <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                        <a href="#" class="text-decoration-none small">Recordar contraseña</a>
+                                        <a href="<?= base_url() ?>" class="btn btn-outline-secondary rounded-pill px-4">
+                                            <i class="bi bi-house-door me-1"></i>Ir al inicio
+                                        </a>
                                         <button type="submit" class="btn btn-primary px-4 rounded-pill">Ingresar</button>
                                     </div>
                                 </form>
