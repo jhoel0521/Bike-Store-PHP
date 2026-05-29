@@ -40,15 +40,12 @@ FROM products ORDER BY product_id DESC");
 </div>
 
 <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-    <div class="card-header bg-white border-0 py-3 d-flex align-items-center justify-content-between">
-        <div>
-            <h2 class="h5 mb-0">Listado</h2>
-            <p class="text-secondary small mb-0">Total: <?= count($lista_productos) ?></p>
-        </div>
+    <div class="card-header bg-white border-0 py-3">
+        <h2 class="h5 mb-0">Listado</h2>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover table-borderless align-middle mb-0">
+            <table id="tabla-productos" class="table table-hover table-borderless align-middle mb-0">
                 <thead class="bg-light">
                     <tr>
                         <th scope="col" class="text-secondary fw-semibold small text-uppercase">ID</th>
@@ -103,19 +100,36 @@ FROM products ORDER BY product_id DESC");
                                 <?php } ?>
                             </tr>
                         <?php } ?>
-                    <?php } else { ?>
-                        <tr>
-                            <td colspan="7">
-                                <div class="text-center py-5 text-secondary app-empty-state">
-                                    <i class="bi bi-bicycle display-6 d-block mb-2 text-primary"></i>
-                                    <p class="mb-0">Todavía no hay productos registrados.</p>
-                                </div>
-                            </td>
-                        </tr>
                     <?php } ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        new DataTable('#tabla-productos', {
+            language: { url: 'https://cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json' },
+            columnDefs: [{ orderable: false, searchable: false, targets: [2, -1] }],
+            pageLength: 10,
+            order: [[0, 'asc']],
+        });
+    });
+
+    function borrar(id) {
+        Swal.fire({
+            title: '¿Deseas eliminar este producto?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'index.php?txtID=' + id;
+            }
+        });
+    }
+</script>
 <?php include("../../templates/footer.php"); ?>
