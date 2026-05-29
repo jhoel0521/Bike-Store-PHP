@@ -1,24 +1,36 @@
 <?php
 require_once __DIR__ . '/../../bd.php';
 app_require_auth();
-//Envio de parametros en la URL o en el metodo GET
-if (isset($_GET['txtID'])) {
-    $txtID = $_GET['txtID'];
+// Eliminar solo mediante método HTTP DELETE (petición fetch desde cliente)
+if (request()->method() === 'DELETE') {
+    $txtID = request()->get('txtID');
 
-    $productosAsociados = \DB::getValor("SELECT COUNT(*) FROM products WHERE category_id = :id", [":id" => $txtID]);
-
-    if ($productosAsociados > 0) {
-        $mensaje = "No se puede eliminar esta categoría porque tiene productos asociados.";
-    } else {
-        try {
-            \DB::ejecutarConsulta("DELETE FROM categories WHERE category_id=:id", [":id" => $txtID]);
-            $mensaje = "Registro eliminado";
-        } catch (PDOException $ex) {
-            $mensaje = "Error al eliminar la categoría.";
-        }
+    if ($txtID === null || $txtID === '') {
+        api_error('Parámetro txtID es requerido.', 400);
     }
 
-    redirigir_con_mensaje('index.php', $mensaje);
+    $id = (int) $txtID;
+    if ($id <= 0) {
+        api_error('txtID inválido.', 400);
+    }
+
+    $categoria = \DB::getRegistro("SELECT category_id FROM categories WHERE category_id = :id", [":id" => $id]);
+    if (!$categoria) {
+        api_error('Categoría no encontrada.', 404);
+    }
+
+    $productosAsociados = (int) \DB::getValor("SELECT COUNT(*) FROM products WHERE category_id = :id", [":id" => $id]);
+    if ($productosAsociados > 0) {
+        api_error('No se puede eliminar esta categoría porque tiene productos asociados.', 409);
+    }
+
+    try {
+        \DB::ejecutarConsulta("DELETE FROM categories WHERE category_id=:id", [":id" => $id]);
+        api_no_content();
+    } catch (PDOException $ex) {
+        error_log('categorias/index.php DELETE error: ' . $ex->getMessage());
+        api_error('Error interno al eliminar la categoría.', 500, $ex->getMessage());
+    }
 }
 
 //Consulta de categorias
@@ -82,10 +94,17 @@ $lista_categorias = \DB::getTabla("SELECT * FROM categories ORDER BY category_id
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         new DataTable('#tabla-categorias', {
-            language: { url: 'https://cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json' },
-            columnDefs: [{ orderable: false, targets: -1 }],
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
+            },
+            columnDefs: [{
+                orderable: false,
+                targets: -1
+            }],
             pageLength: 10,
-            order: [[0, 'asc']],
+            order: [
+                [0, 'asc']
+            ],
         });
     });
 
@@ -100,7 +119,28 @@ $lista_categorias = \DB::getTabla("SELECT * FROM categories ORDER BY category_id
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'index.php?txtID=' + id;
+                fetch('index.php?txtID=' + encodeURIComponent(id), {
+                    method: 'DELETE',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.status === 204) {
+                        Swal.fire({ title: 'Registro eliminado', icon: 'success' }).then(() => location.reload());
+                        return;
+                    }
+
+                    return response.json().then(data => {
+                        if (response.ok && (data.success ?? true)) {
+                            Swal.fire({ title: data.message ?? 'Registro eliminado', icon: 'success' }).then(() => location.reload());
+                        } else {
+                            Swal.fire({ title: data.message ?? 'Error interno', icon: 'error' });
+                        }
+                    });
+                }).catch(() => {
+                    Swal.fire('Error', 'No se pudo eliminar el registro.', 'error');
+                });
             }
         });
     }

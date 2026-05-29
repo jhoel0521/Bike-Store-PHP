@@ -1,23 +1,52 @@
 <?php require_once __DIR__ . '/../../bd.php';
 
-//Envio de parametros en la URLo en el metodo GET
-if (isset($_GET["txtID"])) {
+// Eliminar solo mediante método HTTP DELETE (petición fetch desde cliente)
+if (request()->method() === 'DELETE') {
     if (!app_is_logged_in()) {
-        redirigir(base_url() . 'login.php');
+        api_error('No autorizado.', 401);
     }
-    $txtID = (isset($_GET["txtID"])) ? $_GET['txtID'] : "";
-    //Buscar el archivo relacionadocon el producto
-    $registro_recuperado = \DB::getRegistro("SELECT imagen FROM products WHERE product_id=:id", [":id" => $txtID]);
-    //Buscar Archivo foto y borralo
-    if (isset($registro_recuperado["imagen"]) && $registro_recuperado["imagen"] != "") {
-        if (file_exists("./img/" . $registro_recuperado["imagen"])) {
-            unlink("./img/" . $registro_recuperado["imagen"]);
+
+    $txtID = request()->get('txtID');
+    if ($txtID === null || $txtID === '') {
+        api_error('Parámetro txtID es requerido.', 400);
+    }
+
+    $id = (int) $txtID;
+    if ($id <= 0) {
+        api_error('txtID inválido.', 400);
+    }
+
+    $registro_recuperado = \DB::getRegistro("SELECT imagen FROM products WHERE product_id=:id", [":id" => $id]);
+    if (!$registro_recuperado) {
+        api_error('Producto no encontrado.', 404);
+    }
+
+    try {
+        \DB::ejecutarConsulta("DELETE FROM products WHERE product_id=:id", [":id" => $id]);
+
+        // Borrar archivo solo después de eliminar el registro en la BD
+        if (isset($registro_recuperado["imagen"]) && $registro_recuperado["imagen"] != "") {
+            $path = __DIR__ . "/img/" . $registro_recuperado["imagen"];
+            if (file_exists($path)) {
+                @unlink($path);
+            }
         }
+
+        api_no_content();
+    } catch (PDOException $ex) {
+        error_log('products/index.php DELETE error: ' . $ex->getMessage());
+
+        // Detectar violación de FK (MySQL error 1451) y responder 409 Conflict
+        $errorInfo = $ex->errorInfo ?? null;
+        $sqlState = is_array($errorInfo) ? ($errorInfo[0] ?? '') : '';
+        $driverCode = is_array($errorInfo) ? ($errorInfo[1] ?? 0) : 0;
+
+        if ($sqlState === '23000' && (int)$driverCode === 1451) {
+            api_error('No se puede eliminar el producto porque tiene registros relacionados (pedidos).', 409, $ex->getMessage());
+        }
+
+        api_error('Error interno al eliminar el producto.', 500, $ex->getMessage());
     }
-    //Borra los datos del producto
-    \DB::ejecutarConsulta("DELETE FROM products WHERE product_id=:id", [":id" => $txtID]);
-    $mensaje = "Registro eliminado";
-    redirigir_con_mensaje('index.php', $mensaje);
 }
 //Consulta de productos y categorias para visualizar como unico registro
 $lista_productos = \DB::getTabla("SELECT *,
@@ -33,9 +62,9 @@ FROM products ORDER BY product_id DESC");
         <p class="text-secondary mb-0">Control visual del inventario con acciones claras.</p>
     </div>
     <?php if (app_is_logged_in()) { ?>
-    <a class="btn btn-primary px-4 rounded-pill" href="crear.php" role="button">
-        <i class="bi bi-plus-circle me-2"></i>Nuevo producto
-    </a>
+        <a class="btn btn-primary px-4 rounded-pill" href="crear.php" role="button">
+            <i class="bi bi-plus-circle me-2"></i>Nuevo producto
+        </a>
     <?php } ?>
 </div>
 
@@ -55,7 +84,7 @@ FROM products ORDER BY product_id DESC");
                         <th scope="col" class="text-secondary fw-semibold small text-uppercase">Precio</th>
                         <th scope="col" class="text-secondary fw-semibold small text-uppercase">Categoría</th>
                         <?php if (app_is_logged_in()) { ?>
-                        <th scope="col" class="text-secondary fw-semibold small text-uppercase text-end">Acciones</th>
+                            <th scope="col" class="text-secondary fw-semibold small text-uppercase text-end">Acciones</th>
                         <?php } ?>
                     </tr>
                 </thead>
@@ -87,16 +116,16 @@ FROM products ORDER BY product_id DESC");
                                     </span>
                                 </td>
                                 <?php if (app_is_logged_in()) { ?>
-                                <td class="text-end">
-                                    <div class="btn-group btn-group-sm" role="group" aria-label="Acciones de producto">
-                                        <a class="btn btn-outline-secondary" href="editar.php?txtID=<?php echo $registro['product_id']; ?>" role="button">
-                                            <i class="bi bi-pencil me-1"></i>Editar
-                                        </a>
-                                        <a class="btn btn-outline-danger" href="javascript:borrar(<?php echo $registro['product_id']; ?>);" role="button">
-                                            <i class="bi bi-trash3 me-1"></i>Eliminar
-                                        </a>
-                                    </div>
-                                </td>
+                                    <td class="text-end">
+                                        <div class="btn-group btn-group-sm" role="group" aria-label="Acciones de producto">
+                                            <a class="btn btn-outline-secondary" href="editar.php?txtID=<?php echo $registro['product_id']; ?>" role="button">
+                                                <i class="bi bi-pencil me-1"></i>Editar
+                                            </a>
+                                            <a class="btn btn-outline-danger" href="javascript:borrar(<?php echo $registro['product_id']; ?>);" role="button">
+                                                <i class="bi bi-trash3 me-1"></i>Eliminar
+                                            </a>
+                                        </div>
+                                    </td>
                                 <?php } ?>
                             </tr>
                         <?php } ?>
@@ -109,10 +138,18 @@ FROM products ORDER BY product_id DESC");
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         new DataTable('#tabla-productos', {
-            language: { url: 'https://cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json' },
-            columnDefs: [{ orderable: false, searchable: false, targets: [2, -1] }],
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
+            },
+            columnDefs: [{
+                orderable: false,
+                searchable: false,
+                targets: [2, -1]
+            }],
             pageLength: 10,
-            order: [[0, 'asc']],
+            order: [
+                [0, 'asc']
+            ],
         });
     });
 
@@ -127,7 +164,28 @@ FROM products ORDER BY product_id DESC");
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'index.php?txtID=' + id;
+                fetch('index.php?txtID=' + encodeURIComponent(id), {
+                    method: 'DELETE',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.status === 204) {
+                        Swal.fire({ title: 'Registro eliminado', icon: 'success' }).then(() => location.reload());
+                        return;
+                    }
+
+                    return response.json().then(data => {
+                        if (response.ok && (data.success ?? true)) {
+                            Swal.fire({ title: data.message ?? 'Registro eliminado', icon: 'success' }).then(() => location.reload());
+                        } else {
+                            Swal.fire({ title: data.message ?? 'Error interno', icon: 'error' });
+                        }
+                    });
+                }).catch(() => {
+                    Swal.fire('Error', 'No se pudo eliminar el producto.', 'error');
+                });
             }
         });
     }

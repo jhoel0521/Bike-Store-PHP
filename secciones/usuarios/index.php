@@ -1,30 +1,41 @@
 <?php require_once __DIR__ . '/../../bd.php';
 app_require_admin();
 
-if (isset($_GET['txtID'])) {
-    $txtID = (int) $_GET['txtID'];
-    $usuarioActual = app_current_user();
+if (request()->method() === 'DELETE') {
+    $rawId = request()->get('txtID');
+    if ($rawId === null || $rawId === '') {
+        api_error('Parámetro txtID es requerido.', 400);
+    }
 
+    $txtID = (int) $rawId;
+    if ($txtID <= 0) {
+        api_error('txtID inválido.', 400);
+    }
+
+    $usuarioActual = app_current_user();
     if ($usuarioActual !== null && (int) ($usuarioActual['user_id'] ?? 0) === $txtID) {
-        redirigir_con_mensaje('index.php', 'No puedes eliminar tu propio usuario activo.', 'warning');
+        api_error('No puedes eliminar tu propio usuario activo.', 403);
     }
 
     $registro = \DB::getRegistro("SELECT user_id, role FROM users WHERE user_id = :id", [":id" => $txtID]);
-
     if (!$registro) {
-        redirigir_con_mensaje('index.php', 'El usuario solicitado no existe.', 'error');
+        api_error('El usuario solicitado no existe.', 404);
     }
 
     if (($registro['role'] ?? '') === 'admin') {
         $totalAdmins = (int) \DB::getValor("SELECT COUNT(*) FROM users WHERE role = 'admin'");
-
         if ($totalAdmins <= 1) {
-            redirigir_con_mensaje('index.php', 'Debe existir al menos un administrador.', 'warning');
+            api_error('Debe existir al menos un administrador.', 409);
         }
     }
 
-    \DB::ejecutarConsulta("DELETE FROM users WHERE user_id = :id", [":id" => $txtID]);
-    redirigir_con_mensaje('index.php', 'Registro eliminado');
+    try {
+        \DB::ejecutarConsulta("DELETE FROM users WHERE user_id = :id", [":id" => $txtID]);
+        api_no_content();
+    } catch (PDOException $ex) {
+        error_log('usuarios/index.php DELETE error: ' . $ex->getMessage());
+        api_error('Error interno al eliminar el usuario.', 500, $ex->getMessage());
+    }
 }
 
 $lista_usuarios = \DB::getTabla("SELECT user_id, user, email, role FROM users ORDER BY user_id DESC");
@@ -109,7 +120,26 @@ $lista_usuarios = \DB::getTabla("SELECT user_id, user, email, role FROM users OR
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'index.php?txtID=' + id;
+                fetch('index.php?txtID=' + encodeURIComponent(id), {
+                    method: 'DELETE',
+                    credentials: 'same-origin',
+                    headers: { 'Accept': 'application/json' }
+                }).then(response => {
+                    if (response.status === 204) {
+                        Swal.fire({ title: 'Registro eliminado', icon: 'success' }).then(() => location.reload());
+                        return;
+                    }
+
+                    return response.json().then(data => {
+                        if (response.ok && (data.success ?? true)) {
+                            Swal.fire({ title: data.message ?? 'Registro eliminado', icon: 'success' }).then(() => location.reload());
+                        } else {
+                            Swal.fire({ title: data.message ?? 'Error interno', icon: 'error' });
+                        }
+                    });
+                }).catch(() => {
+                    Swal.fire('Error', 'No se pudo eliminar el usuario.', 'error');
+                });
             }
         });
     }
