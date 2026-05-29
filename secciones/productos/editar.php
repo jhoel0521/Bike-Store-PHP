@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../libs/functions.php';
 $txtID = '';
 $product_name = '';
-$foto_actual = '';
+$imagen_actual = '';
 $model_year = '';
 $price = '';
 $category_id = '';
@@ -17,40 +17,40 @@ if (request()->method() === 'POST') {
     $model_year = request()->get("model_year", "");
     $price = request()->get("price", "");
     $category_id = request()->get("category_id", "");
-    $foto = request()->file("foto", "name", "");
+    $imagen = request()->file("imagen", "name", "");
 
-    $registro_recuperado = \DB::getRegistro("SELECT foto FROM products WHERE product_id=:id", [":id" => $txtID]);
+    $registro_recuperado = \DB::getRegistro("SELECT imagen FROM products WHERE product_id=:id", [":id" => $txtID]);
 
-    if ($foto !== "") {
+    if ($imagen !== "") {
         $directorio_imagenes = __DIR__ . "/img/";
 
-        if (isset($registro_recuperado["foto"]) && $registro_recuperado["foto"] !== "" && file_exists($directorio_imagenes . $registro_recuperado["foto"])) {
-            unlink($directorio_imagenes . $registro_recuperado["foto"]);
+        if (isset($registro_recuperado["imagen"]) && $registro_recuperado["imagen"] !== "" && file_exists($directorio_imagenes . $registro_recuperado["imagen"])) {
+            unlink($directorio_imagenes . $registro_recuperado["imagen"]);
         }
 
         $fecha_ = new DateTime();
-        $nombreArchivo_foto = $fecha_->getTimestamp() . "_" . $foto;
-        $tmp_foto = request()->file("foto", "tmp_name", "");
+        $nombreArchivo_imagen = $fecha_->getTimestamp() . "_" . $imagen;
+        $tmp_imagen = request()->file("imagen", "tmp_name", "");
 
-        if ($tmp_foto !== "") {
-            move_uploaded_file($tmp_foto, $directorio_imagenes . $nombreArchivo_foto);
+        if ($tmp_imagen !== "") {
+            move_uploaded_file($tmp_imagen, $directorio_imagenes . $nombreArchivo_imagen);
         }
     } else {
-        $nombreArchivo_foto = $registro_recuperado["foto"];
+        $nombreArchivo_imagen = $registro_recuperado["imagen"];
     }
 
     if ($product_name === "" || $model_year === "" || $price === "" || $category_id === "") {
         $mensaje = "Todos los campos son obligatorios.";
     } else {
         \DB::ejecutarConsulta(
-            "UPDATE products SET product_name=:product_name, model_year=:model_year, price=:price, category_id=:category_id, foto=:foto WHERE product_id=:id",
+            "UPDATE products SET product_name=:product_name, model_year=:model_year, price=:price, category_id=:category_id, imagen=:imagen WHERE product_id=:id",
             [
                 ":id" => $txtID,
                 ":product_name" => $product_name,
                 ":model_year" => $model_year,
                 ":price" => $price,
                 ":category_id" => $category_id,
-                ":foto" => $nombreArchivo_foto,
+                ":imagen" => $nombreArchivo_imagen,
             ]
         );
         redirigir_con_mensaje('index.php', 'Registro actualizado');
@@ -66,7 +66,7 @@ if (request()->method() === 'POST') {
         }
 
         $product_name = $registro["product_name"];
-        $foto_actual = $registro["foto"];
+        $imagen_actual = $registro["imagen"];
         $model_year = $registro["model_year"];
         $price = $registro["price"];
         $category_id = $registro["category_id"];

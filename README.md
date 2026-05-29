@@ -1,6 +1,6 @@
 # Bike Store
 
-Proyecto PHP simple para administrar categorías y productos.
+Proyecto PHP simple para administrar categorías, productos y usuarios con login por roles.
 
 ## Requisitos
 
@@ -75,3 +75,4 @@ npm run docker:run-script-db
 # Si no tienes la app corriendo, el script hará build y correrá el seeder
 npm run docker:run-script-db
 ```
+- Credenciales de demo del seed: `admin / Admin123!` y `empleado / User123!`.

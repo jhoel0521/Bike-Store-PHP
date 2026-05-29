@@ -2,6 +2,10 @@
 require_once __DIR__ . '/bd.php';
 ensureSeccion();
 
+if (app_is_logged_in()) {
+    redirigir(base_url() . 'index.php');
+}
+
 $errorMessage = false;
 $mensaje = '';
 
@@ -10,7 +14,7 @@ if ($_POST) {
     $clave = $_POST['clave'] ?? '';
 
     $registro = \DB::getRegistro(
-        "SELECT *, COUNT(*) as n_usuario FROM usuarios WHERE usuario=:usuario AND clave=:clave",
+        "SELECT user_id, user, password, email, role FROM users WHERE user=:usuario AND password=:clave LIMIT 1",
         [
             ':usuario' => $usuario,
             ':clave' => $clave,
@@ -18,10 +22,8 @@ if ($_POST) {
     );
 
     if ($registro) {
-        $_SESSION['usuario'] = $registro['usuario'];
-        $_SESSION['n_usuario'] = $registro['n_usuario'];
-        header('Location: index.php');
-        exit;
+        app_auth_login($registro);
+        redirigir(base_url() . 'index.php');
     }
 
     $mensaje = 'Error: El usuario o la contraseña son incorrectos.';

@@ -4,11 +4,11 @@
 if (isset($_GET["txtID"])) {
     $txtID = (isset($_GET["txtID"])) ? $_GET['txtID'] : "";
     //Buscar el archivo relacionadocon el producto
-    $registro_recuperado = \DB::getRegistro("SELECT foto FROM products WHERE product_id=:id", [":id" => $txtID]);
+    $registro_recuperado = \DB::getRegistro("SELECT imagen FROM products WHERE product_id=:id", [":id" => $txtID]);
     //Buscar Archivo foto y borralo
-    if (isset($registro_recuperado["foto"]) && $registro_recuperado["foto"] != "") {
-        if (file_exists("./img/" . $registro_recuperado["foto"])) {
-            unlink("./img/" . $registro_recuperado["foto"]);
+    if (isset($registro_recuperado["imagen"]) && $registro_recuperado["imagen"] != "") {
+        if (file_exists("./img/" . $registro_recuperado["imagen"])) {
+            unlink("./img/" . $registro_recuperado["imagen"]);
         }
     }
     //Borra los datos del producto
@@ -63,9 +63,9 @@ FROM products ORDER BY product_id DESC");
                                 <td class="fw-semibold"><?php echo htmlspecialchars($registro['product_name'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
-                                        <?php if (!empty($registro['foto'])) { ?>
+                                        <?php if (!empty($registro['imagen'])) { ?>
                                             <img
-                                                src="img/<?php echo htmlspecialchars($registro['foto'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                src="img/<?php echo htmlspecialchars($registro['imagen'], ENT_QUOTES, 'UTF-8'); ?>"
                                                 class="rounded-3 shadow-sm app-table-thumb"
                                                 alt="Imagen del producto" />
                                         <?php } else { ?>
