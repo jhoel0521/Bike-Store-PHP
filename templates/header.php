@@ -74,6 +74,11 @@ $usuarioActual = app_current_user();
                         </li>
                         <?php if (app_is_logged_in()) { ?>
                             <li class="nav-item">
+                                <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/pedidos/"><i class="bi bi-receipt me-1"></i>Pedidos</a>
+                            </li>
+                        <?php } ?>
+                        <?php if (app_is_logged_in()) { ?>
+                            <li class="nav-item">
                                 <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/clientes/"><i class="bi bi-people me-1"></i>Clientes</a>
                             </li>
                             <li class="nav-item">
