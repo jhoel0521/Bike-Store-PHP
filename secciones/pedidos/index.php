@@ -57,7 +57,7 @@ FROM orders ORDER BY order_date DESC");
                                 <?php if (app_is_logged_in()) { ?>
                                     <td class="text-end">
                                         <div class="btn-group btn-group-sm" role="group">
-                                            <a class="btn btn-outline-secondary" href="crear.php?txtID=<?= $r['order_id'] ?>">Ver / Editar</a>
+                                            <a class="btn btn-outline-secondary" href="editar.php?txtID=<?= $r['order_id'] ?>">Ver / Editar</a>
                                             <?php if (($r['estado'] ?? '') !== 'anulado') { ?>
                                                 <a class="btn btn-outline-danger" href="javascript:anular(<?= $r['order_id'] ?>);">Anular</a>
                                             <?php } ?>

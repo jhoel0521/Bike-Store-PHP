@@ -5,7 +5,7 @@ $items = $items ?? [];
 $clientes = $clientes ?? [];
 $productos = $productos ?? [];
 ?>
-<form method="post" action="crear.php" id="form-pedido">
+<form method="post" action="<?= htmlspecialchars($form_action ?? 'guardar.php') ?>" id="form-pedido">
     <?php if ($pedido) { ?>
         <input type="hidden" name="txtID" value="<?= htmlspecialchars($pedido['order_id']) ?>" />
     <?php } ?>
@@ -76,8 +76,8 @@ $productos = $productos ?? [];
 
     <div class="d-flex gap-2 mb-3">
         <button type="button" id="add-row" class="btn btn-sm btn-outline-primary">Añadir ítem</button>
-        <?php if (!$pedido) { ?>
-            <button type="submit" class="btn btn-primary">Guardar pedido</button>
+        <?php if (!$pedido || (isset($form_action) && $form_action === 'editar.php')) { ?>
+            <button type="submit" class="btn btn-primary"><?= $pedido ? 'Guardar cambios' : 'Guardar pedido' ?></button>
         <?php } else { ?>
             <span class="badge bg-info-subtle text-info align-self-center">Visualizando pedido existente. Añade ítems individualmente.</span>
         <?php } ?>
