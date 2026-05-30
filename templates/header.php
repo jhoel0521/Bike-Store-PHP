@@ -81,12 +81,9 @@ $usuarioActual = app_current_user();
                             <li class="nav-item">
                                 <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/clientes/"><i class="bi bi-people me-1"></i>Clientes</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/empleados/"><i class="bi bi-briefcase me-1"></i>Empleados</a>
-                            </li>
                             <?php if (($usuarioActual['role'] ?? '') === 'admin') { ?>
                                 <li class="nav-item">
-                                    <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/usuarios/"><i class="bi bi-person-gear me-1"></i>Usuarios</a>
+                                    <a class="nav-link rounded-pill px-3" href="<?= base_url() ?>secciones/usuarios/"><i class="bi bi-person-gear me-1"></i>Empleados</a>
                                 </li>
                             <?php } ?>
                         <?php } ?>
